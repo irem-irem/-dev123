@@ -1,0 +1,41 @@
+Öyle bir sıralama algoritması tasarlayınız ki, sıralama işlemini bir en büyük bir en küçük eleman olacak şekilde yapsın. Örneğin (60,80,3,9,57,11)    gibi    bir    diziyi (80,3,60,9,57,11)  şeklinde sıralayacak. Program parçası C programlama dili ile yazılacaktır.
+#include <stdio.h>
+
+void alternateSort(int arr[], int n) {
+    int temp;
+    for (int i = 0; i < n/2; i++) {
+        for (int j = i; j < n-i-1; j++) {
+            if (arr[j] > arr[j+1]) {
+                temp = arr[j];
+                arr[j] = arr[j+1];
+                arr[j+1] = temp;
+            }
+        }
+        for (int j = n-i-2; j > i; j--) {
+            if (arr[j] < arr[j-1]) {
+                temp = arr[j];
+                arr[j] = arr[j-1];
+                arr[j-1] = temp;
+            }
+        }
+    }
+}
+
+int main() {
+    int arr[] = {60, 80, 3, 9, 57, 11};
+    int n = sizeof(arr) / sizeof(arr[0]);
+
+    printf("Diziden önce:\n");
+    for (int i = 0; i < n; i++) {
+        printf("%d ", arr[i]);
+    }
+
+    alternateSort(arr, n);
+
+    printf("\nDiziden sonra:\n");
+    for (int i = 0; i < n; i++) {
+        printf("%d ", arr[i]);
+    }
+
+    return 0;
+}

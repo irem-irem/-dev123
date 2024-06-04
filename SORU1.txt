@@ -1,0 +1,58 @@
+Bir X dizisine 0-1000 arası rasgele 500 tamsayı eleman yerleştirip daha sonra bu diziyi hem “Birleştirmeli Sıralama(Insertion Sort)” hemde  “Seçmeli  Sırlama(Selection  Sort)”  algoritmaları  ile sıralayıp her bir algoritmanın sıralama sürelerini ölçerek ekrana uygun bir mesaj ile gösteren program parçasını C programlama dili ile yazınız.
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+void insertionSort(int arr[], int n) {
+    int i, key, j;
+    for (i = 1; i < n; i++) {
+        key = arr[i];
+        j = i - 1;
+
+        while (j >= 0 && arr[j] > key) {
+            arr[j + 1] = arr[j];
+            j = j - 1;
+        }
+        arr[j + 1] = key;
+    }
+}
+
+void selectionSort(int arr[], int n) {
+    int i, j, min_idx;
+    for (i = 0; i < n-1; i++) {
+        min_idx = i;
+        for (j = i+1; j < n; j++)
+            if (arr[j] < arr[min_idx])
+                min_idx = j;
+        int temp = arr[min_idx];
+        arr[min_idx] = arr[i];
+        arr[i] = temp;
+    }
+}
+
+int main() {
+    int n = 500;
+    int arr[n];
+    srand(time(NULL));
+
+
+    for (int i = 0; i < n; i++) {
+        arr[i] = rand() % 1001; // 0-1000 arası rasgele tamsayılar
+    }
+
+    // Insertion Sort
+    clock_t start_insertion = clock();
+    insertionSort(arr, n);
+    clock_t end_insertion = clock();
+    double insertion_time = ((double)(end_insertion - start_insertion)) / CLOCKS_PER_SEC;
+
+    clock_t start_selection = clock();
+    selectionSort(arr, n);
+    clock_t end_selection = clock();
+    double selection_time = ((double)(end_selection - start_selection)) / CLOCKS_PER_SEC;
+
+    printf("Insertion Sort süresi: %f saniye\n", insertion_time);
+    printf("Selection Sort süresi: %f saniye\n", selection_time);
+
+    return 0;
+}

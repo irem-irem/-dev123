@@ -1,0 +1,77 @@
+Trie(Metin  Ağacı)  yapısı  nedir?  Çalışma  şeklini  açıklayıp algoritmasını  yazınız.  Örnek  bir  Trie  oluşturma  kodunu  C programlama dili ile yazınız.
+
+
+Trie, kelime köklerini depolamak için kullanılan bir veri yapısıdır. Metin ağacı olarak da bilinen Trie, birçok durumda kelime listelerini, harf önerilerini ve daha fazlasını hızlı bir şekilde bulmak için kullanılır. Trie, karakterlerin bir dizi düğüme bağlı olduğu bir ağaç yapısını temsil eder. Bu yapı, hızlı bir şekilde kelime ekleme, arama ve silme işlemleri yapmak için optimize edilmiştir.
+
+Çalışma şekli:
+
+Her düğüm, bir karakteri temsil eder.
+Kök düğümü genellikle boş bir karakterdir.
+Her düğüm, bir dizi bağlantıya (pointer) sahiptir. Bu bağlantılar, o düğümden başlayarak bir sonraki karaktere geçişi temsil eder.
+Her kelime için, kök düğümden başlayarak her harf için bir düğüm oluşturulur ve son harfin düğümünde kelimenin tamamlanma işareti bulunur.
+Kelimeleri eklemek, aramak ve silmek için bu yapı kullanılır.
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+#define ALPHABET_SIZE 26
+
+// Trie düğümü tanımlaması
+typedef struct TrieNode {
+    struct TrieNode *children[ALPHABET_SIZE];
+    bool isEndOfWord;
+} TrieNode;
+
+// Yeni bir Trie düğümü oluşturma
+TrieNode *createNode() {
+    TrieNode *node = (TrieNode *)malloc(sizeof(TrieNode));
+    node->isEndOfWord = false;
+    for (int i = 0; i < ALPHABET_SIZE; i++) {
+        node->children[i] = NULL;
+    }
+    return node;
+}
+
+// Kelime ekleme fonksiyonu
+void insertWord(TrieNode *root, char *word) {
+    TrieNode *current = root;
+    for (int i = 0; word[i] != '\0'; i++) {
+        int index = word[i] - 'a';
+        if (current->children[index] == NULL) {
+            current->children[index] = createNode();
+        }
+        current = current->children[index];
+    }
+    current->isEndOfWord = true;
+}
+
+// Kelime arama fonksiyonu
+bool searchWord(TrieNode *root, char *word) {
+    TrieNode *current = root;
+    for (int i = 0; word[i] != '\0'; i++) {
+        int index = word[i] - 'a';
+        if (current->children[index] == NULL) {
+            return false;
+        }
+        current = current->children[index];
+    }
+    return (current != NULL && current->isEndOfWord);
+}
+
+int main() {
+    TrieNode *root = createNode();
+
+    char *words[] = {"hello", "world", "apple", "app", "banana"};
+    int num_words = sizeof(words) / sizeof(words[0]);
+    for (int i = 0; i < num_words; i++) {
+        insertWord(root, words[i]);
+    }
+
+    char *search_words[] = {"world", "apple", "app", "banana", "orange"};
+    int num_search_words = sizeof(search_words) / sizeof(search_words[0]);
+    for (int i = 0; i < num_search_words; i++) {
+        if (searchWord(root, search_words[i])) {
+            printf("%s bulundu.\n", search_words[i]);
+        } else {
+            printf("%s bulunamadı.\n", search_words[i]
